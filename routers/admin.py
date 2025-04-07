@@ -26,3 +26,7 @@ def create_admin(admin: admin_schemas.AdminUserCreate, db: Session = Depends(get
 def get_admin_stats(admin_id: int, db: Session = Depends(get_db)):
     count = db.query(func.count(admin_models.Upload.id)).filter(admin_models.Upload.admin_id == admin_id).scalar()
     return {"upload_count": count}
+
+@router.get("/all", response_model=list[admin_schemas.AdminUserOut])
+def get_all_admins(db: Session = Depends(get_db)):
+    return admin_crud.get_all_admins(db)

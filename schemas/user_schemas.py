@@ -1,20 +1,22 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
 
-# 🧾 Базовая схема пользователя
 class UserBase(BaseModel):
     username: str
     email: str
 
-# 🆕 Схема для создания пользователя
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
 class UserCreate(UserBase):
     password: str
 
-# 📤 Схема ответа
-class UserOut(UserBase):
+class UserOut(BaseModel):
     id: int
+    username: str
+    email: str
     registered_at: datetime
 
     class Config:
-        from_attributes = True  # для поддержки ORM-моделей
+        orm_mode = True
