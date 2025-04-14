@@ -1,13 +1,14 @@
 from sqlalchemy.orm import Session
 from models import user_models
-from schemas import user_schemas
+from schemas.user_schemas import UserLogin, UserOut, UserCreate
 from utils.security import hash_password
+from models.user_models import User
 
 # 🔐 Создание нового пользователя с хешированием пароля
-def create_user(db: Session, user: user_schemas.UserCreate):
+def create_user(db: Session, user: UserCreate):
     hashed_pw = hash_password(user.password)
     db_user = user_models.User(
-        username=user.username,
+        login=user.login,
         email=user.email,
         password_hash=hashed_pw
     )
@@ -16,10 +17,9 @@ def create_user(db: Session, user: user_schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
-# 🔍 Получение пользователя по логину
-def get_user_by_username(db: Session, username: str):
-    return db.query(user_models.User).filter(user_models.User.username == username).first()
 
-# 📋 Получение всех пользователей
+def get_user_by_login(db: Session, login: str):
+    return db.query(user_models.User).filter(user_models.User.login == login).first()
+
 def get_all_users(db: Session):
     return db.query(user_models.User).all()

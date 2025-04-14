@@ -3,30 +3,25 @@ from datetime import datetime
 from typing import Optional
 
 # ======= SCHEMAS =======
+class AdminLogin(BaseModel):
+    username: str
+    password: str
 
-# 👤 Админ (базовый)
 class AdminUserBase(BaseModel):
     email: str
-    login: str
+    username: str
     subscription_status: Optional[bool] = False
 
-# 👤 Админ (создание)
 class AdminUserCreate(AdminUserBase):
     password: str
 
-# 👤 Админ (ответ)
 class AdminUserOut(AdminUserBase):
     id: int
     date_registration: datetime
     last_login_date: datetime
 
     class Config:
-        from_attributes = True  # для pydantic v2
-
-# 👤 Админ (вход)
-class AdminLogin(BaseModel):
-    login: str
-    password: str
+        from_attributes = True
 
 # 💳 Платеж (создание)
 class PaymentCreate(BaseModel):

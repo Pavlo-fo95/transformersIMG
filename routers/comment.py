@@ -5,7 +5,7 @@ from db.database import SessionLocal
 from schemas.comment_schemas import CommentCreate, CommentOut
 from crud import comment_crud
 
-router = APIRouter(prefix="/comments", tags=["Comments"])
+router = APIRouter()
 
 def get_db():
     db = SessionLocal()

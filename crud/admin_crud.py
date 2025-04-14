@@ -8,7 +8,7 @@ def create_admin_user(db: Session, admin: admin_schemas.AdminUserCreate):
     hashed_pw = hash_password(admin.password)
     db_admin = admin_models.AdminUser(
         email=admin.email,
-        login=admin.login,
+        username=admin.username,
         password_hash=hashed_pw,
         subscription_status=admin.subscription_status
     )
@@ -17,9 +17,8 @@ def create_admin_user(db: Session, admin: admin_schemas.AdminUserCreate):
     db.refresh(db_admin)
     return db_admin
 
-# 🔎 Поиск по логину
-def get_admin_user_by_login(db: Session, login: str):
-    return db.query(admin_models.AdminUser).filter(admin_models.AdminUser.login == login).first()
+def get_admin_user_by_username(db: Session, username: str):
+    return db.query(admin_models.AdminUser).filter(admin_models.AdminUser.username == username).first()
 
 # 📋 Все админы
 def get_all_admins(db: Session):

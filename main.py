@@ -1,3 +1,6 @@
+import logging
+logging.getLogger("transformers").setLevel(logging.ERROR)
+
 from fastapi import FastAPI, UploadFile, File, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -11,7 +14,7 @@ import os
 
 # 🔗 Импорт модулей проекта
 from routers import user, admin, comment
-from db.database import SessionLocal
+from db.database import SessionLocal, engine
 from crud import admin_crud
 from schemas import admin_schemas
 from models import admin_models, user_models, comment_models
@@ -19,10 +22,10 @@ from models import admin_models, user_models, comment_models
 # 🔄 Загрузка переменных окружения (.env)
 load_dotenv()
 
-# 🔨 Создание таблиц в БД
-admin_models.Base.metadata.create_all(bind=SessionLocal.kw["bind"])
-user_models.Base.metadata.create_all(bind=SessionLocal.kw["bind"])
-comment_models.Base.metadata.create_all(bind=SessionLocal.kw["bind"])
+# 🔨 Создание таблиц в БД (один вызов на каждый Base)
+admin_models.Base.metadata.create_all(bind=engine)
+user_models.Base.metadata.create_all(bind=engine)
+comment_models.Base.metadata.create_all(bind=engine)
 
 # 🧠 Инициализация FastAPI
 app = FastAPI()
@@ -31,16 +34,16 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",     # React Dev
-        "http://127.0.0.1:3000",     # React Dev альтернативный
-        "https://scantext.z36.web.core.windows.net",  # Продакшн
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://scantext.z36.web.core.windows.net",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 📦 OCR-модель
+# 📦 OCR-модель TrOCR
 processor = TrOCRProcessor.from_pretrained("microsoft/trocr-base-printed")
 model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-base-printed")
 
@@ -95,7 +98,7 @@ def test_db(db: Session = Depends(get_db)):
 def list_payments(db: Session = Depends(get_db)):
     return admin_crud.get_payments(db)
 
-# 🧹 Удаление __pycache__ (опционально)
+# 🧹 Удаление __pycache__ (по желанию)
 def delete_pycache_dirs(base_path):
     pycache_dirs = list(Path(base_path).rglob("__pycache__"))
     for dir_path in pycache_dirs:
@@ -104,4 +107,4 @@ def delete_pycache_dirs(base_path):
         dir_path.rmdir()
     return len(pycache_dirs)
 
-# delete_pycache_dirs(".")  # 👉 если надо вручную чистить
+delete_pycache_dirs(".")  # Включить при необходимости
