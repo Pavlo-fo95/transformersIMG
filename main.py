@@ -107,4 +107,4 @@ def delete_pycache_dirs(base_path):
         dir_path.rmdir()
     return len(pycache_dirs)
 
-delete_pycache_dirs(".")  # Включить при необходимости
+# delete_pycache_dirs(".")  # Включить при необходимости

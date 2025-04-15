@@ -39,9 +39,9 @@ class Payment(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("admin_users.id"), nullable=False)
-    wallet_address = Column(String(255), nullable=False)
     amount = Column(Integer, nullable=True)
+    status = Column(String(50), nullable=True)
+    wallet_address = Column(String(255), nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("AdminUser", back_populates="payments")
-

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 
 from db.database import SessionLocal
 from crud import admin_crud
@@ -42,4 +43,10 @@ def get_admin_stats(admin_id: int, db: Session = Depends(get_db)):
     count = db.query(func.count(admin_models.Upload.id)).filter(admin_models.Upload.admin_id == admin_id).scalar()
     return {"upload_count": count}
 
-
+@router.get("/payments/", response_model=list[admin_schemas.PaymentOut])
+def get_payments(db: Session = Depends(get_db)):
+    return (
+        db.query(admin_models.Payment)
+        .options(joinedload(admin_models.Payment.user))
+        .all()
+    )

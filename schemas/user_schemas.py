@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
 
+
 class UserBase(BaseModel):
     login: str
     email: str
@@ -17,6 +18,11 @@ class UserCreate(BaseModel):
 
     class Config:
         orm_mode = True
+
+class PasswordChange(BaseModel):
+    login: str
+    old_password: str
+    new_password: str
 
 class UserOut(BaseModel):
     id: int

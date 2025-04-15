@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from schemas import admin_schemas
 from models import admin_models
 from utils.security import hash_password
+from sqlalchemy.orm import joinedload
 
 # 🔐 Создание администратора с хешированием пароля
 def create_admin_user(db: Session, admin: admin_schemas.AdminUserCreate):
@@ -38,7 +39,7 @@ def create_payment(db: Session, payment: admin_schemas.PaymentCreate):
 
 # 📋 Все платежи
 def get_payments(db: Session):
-    return db.query(admin_models.Payment).all()
+    return db.query(admin_models.Payment).options(joinedload(admin_models.Payment.user)).all()
 
 # 📋 Платежи конкретного пользователя
 def get_payments_by_user_id(db: Session, user_id: int):
