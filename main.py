@@ -1,13 +1,15 @@
 import logging
 logging.getLogger("transformers").setLevel(logging.ERROR)
 
-from fastapi import FastAPI, UploadFile, File, Depends
+from fastapi import FastAPI, UploadFile, File, Depends, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+from typing import Optional, List
 from PIL import Image
 import pytesseract
 import io
+
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -22,7 +24,7 @@ from models import admin_models, user_models, comment_models
 # 🔄 Загрузка переменных окружения (.env)
 load_dotenv()
 
-# 🔨 Создание таблиц в БД (один вызов на каждый Base)
+# 🔨 Создание таблиц в БД
 admin_models.Base.metadata.create_all(bind=engine)
 user_models.Base.metadata.create_all(bind=engine)
 comment_models.Base.metadata.create_all(bind=engine)
@@ -72,17 +74,29 @@ async def extract_text(file: UploadFile = File(...)):
     except Exception as e:
         return {"error": f"TrOCR error: {str(e)}"}
 
-# 🖼 Распознавание текста (Tesseract)
+# 🖼 Распознавание текста (Tesseract - один язык по умолчанию)
 @app.post("/tesseract-ocr")
-async def tesseract_ocr(file: UploadFile = File(...)):
+async def tesseract_ocr(
+    file: UploadFile = File(...),
+    lang: List[str] = Form(["eng"])
+):
     try:
         image = Image.open(io.BytesIO(await file.read())).convert("RGB")
-        text = pytesseract.image_to_string(image, lang="eng,ru")
-        return {"text": text.strip()}
+        lang_code = '+'.join(lang)
+
+        # Распознаем
+        raw_text = pytesseract.image_to_string(image, lang=lang_code)
+
+        # Защита от байтов, которые не конвертируются
+        safe_text = raw_text.encode('utf-8', errors='ignore').decode('utf-8', errors='ignore')
+
+        return {"text": safe_text.strip()}
+
     except Exception as e:
         return {"error": f"Tesseract error: {str(e)}"}
 
-# 🔘 Тестовый корневой эндпоинт
+
+# 🔘 Корневой тест
 @app.get("/")
 def root():
     return {"message": "👋 Добро пожаловать в ScanText API"}
@@ -93,7 +107,7 @@ def test_db(db: Session = Depends(get_db)):
     users = db.query(user_models.User).all()
     return {"user_count": len(users)}
 
-# 📄 Список платежей (для админки)
+# 📄 Список платежей
 @app.get("/payments", response_model=list[admin_schemas.PaymentOut])
 def list_payments(db: Session = Depends(get_db)):
     return admin_crud.get_payments(db)
@@ -107,4 +121,4 @@ def delete_pycache_dirs(base_path):
         dir_path.rmdir()
     return len(pycache_dirs)
 
-# delete_pycache_dirs(".")  # Включить при необходимости
+# delete_pycache_dirs(".")  # Раскомментируйте при необходимости
