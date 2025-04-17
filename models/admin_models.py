@@ -38,10 +38,12 @@ class Payment(Base):
     __tablename__ = "payments"
 
     id = Column(Integer, primary_key=True, index=True)
+    user_login = Column(String(100), nullable=True)
     user_id = Column(Integer, ForeignKey("admin_users.id"), nullable=False)
     amount = Column(Integer, nullable=True)
-    status = Column(String(50), nullable=True)
-    wallet_address = Column(String(255), nullable=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    status = Column(String(50), default="pending")
+    reference = Column(String(255), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)  # ⬅️ вернуть
+    wallet_address = Column(String(255), nullable=False)
 
     user = relationship("AdminUser", back_populates="payments")

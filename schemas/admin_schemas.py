@@ -38,17 +38,22 @@ class UserShort(BaseModel):
 class PaymentCreate(BaseModel):
     user_id: int
     amount: Optional[int] = None
-    status: Optional[str] = None
     wallet_address: str
+    reference: Optional[str] = None
+    user_login: Optional[str] = None
 
 # 💳 Платеж (ответ)
 class PaymentOut(BaseModel):
     id: int
     amount: Optional[int]
     status: Optional[str]
+    created_at: datetime
     wallet_address: str
-    timestamp: datetime
+    reference: Optional[str] = None
+    user_login: Optional[str]
     user: UserShort
 
     class Config:
         from_attributes = True
+
+

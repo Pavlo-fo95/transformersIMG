@@ -95,7 +95,6 @@ async def tesseract_ocr(
     except Exception as e:
         return {"error": f"Tesseract error: {str(e)}"}
 
-
 # 🔘 Корневой тест
 @app.get("/")
 def root():
@@ -106,11 +105,6 @@ def root():
 def test_db(db: Session = Depends(get_db)):
     users = db.query(user_models.User).all()
     return {"user_count": len(users)}
-
-# 📄 Список платежей
-@app.get("/payments", response_model=list[admin_schemas.PaymentOut])
-def list_payments(db: Session = Depends(get_db)):
-    return admin_crud.get_payments(db)
 
 # 🧹 Удаление __pycache__ (по желанию)
 def delete_pycache_dirs(base_path):
