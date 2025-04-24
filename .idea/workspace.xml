@@ -6,12 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="314f1964-c6bc-4300-89ec-4b8f0d833247" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crud/user_crud.py" beforeDir="false" afterPath="$PROJECT_DIR$/crud/user_crud.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/scantext.db" beforeDir="false" afterPath="$PROJECT_DIR$/db/scantext.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/scantext.sqbpro" beforeDir="false" afterPath="$PROJECT_DIR$/db/scantext.sqbpro" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/admin_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/admin_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schemas/admin_schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/admin_schemas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/user_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routers/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schemas/user_schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/user_schemas.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

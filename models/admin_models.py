@@ -16,21 +16,17 @@ class AdminUser(Base):
 
 
     # Это для обратной связи
-    uploads = relationship("Upload", back_populates="admin")
+    uploads = relationship("AdminUpload", back_populates="admin")
 
     payments = relationship("Payment", back_populates="user")
 
-class Upload(Base):
-    __tablename__ = "uploads"
+class AdminUpload(Base):
+    __tablename__ = "admin_uploads"
 
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String)
     uploaded_at = Column(DateTime, default=datetime.utcnow)
-
-    # Вот тут foreign key к администратору
     admin_id = Column(Integer, ForeignKey("admin_users.id"))
-
-    # Это удобно для ORM
     admin = relationship("AdminUser", back_populates="uploads")
 
 

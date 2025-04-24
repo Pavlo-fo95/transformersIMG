@@ -7,7 +7,7 @@ from models.user_models import User
 # 🔐 Создание нового пользователя с хешированием пароля
 def create_user(db: Session, user: UserCreate):
     hashed_pw = hash_password(user.password)
-    db_user = user_models.User(
+    db_user = User(
         login=user.login,
         email=user.email,
         password_hash=hashed_pw

@@ -33,3 +33,15 @@ class UserOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UploadOut(BaseModel):
+    id: int
+    filename: str
+    uploaded_at: datetime
+    user_id: Optional[int]
+    login: Optional[str]
+    recognized_text: Optional[str] = None
+    file_url: Optional[str] = None
+
+    class Config:
+        from_attributes = True
